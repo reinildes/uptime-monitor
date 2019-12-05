@@ -1,6 +1,7 @@
 package org;
 
 import java.util.concurrent.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +40,13 @@ public class Main {
                 .reduce(new String(), (accumulator, newStatus) -> accumulator.concat(newStatus));
 
         System.out.println(statusSummary);
+
+        var downServices = serviceStatuses.stream()
+                .filter(Predicate.not(ServiceStatus::isLive))
+                .collect(Collectors.toList());
+
+        if(!downServices.isEmpty())
+            new SimpleNotificationService().send(downServices);
 
     }
 
