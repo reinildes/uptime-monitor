@@ -6,8 +6,6 @@ import java.util.*;
 
 class HttpMonitor {
 
-    public static StringBuilder log = new StringBuilder();
-
     private static boolean isReachable(String host, int port) {
         // Ping the provided IP and port
         try (Socket socket = new Socket()) {
@@ -30,10 +28,9 @@ class HttpMonitor {
 
         // Are HTTP and HTTPS reachable?
         boolean http = isReachable(domain, 80);
-        boolean https = isReachable(domain, 90);
+        boolean https = isReachable(domain, 443);
 
         // Log result to console
         return new ServiceStatus(domain, ip, http, https);
     }
-
 }
