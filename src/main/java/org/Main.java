@@ -11,9 +11,6 @@ public class Main {
     static int CHECK_INTERVAL = 5;   // Check every 5 seconds
     static int NUM_THREADS = 3;      // Number of threads
 
-    // Thread pool to process domains
-    static ExecutorService threadPool = Executors.newFixedThreadPool(NUM_THREADS);
-
     // Executor to run the check and run reports on a service
     static ScheduledExecutorService taskScheduler = Executors.newScheduledThreadPool(1);
 
