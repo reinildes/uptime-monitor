@@ -56,13 +56,13 @@ public class Main {
 
     }
 
-    List<ServiceStatus> getDownServices(List<ServiceStatus> serviceStatuses) {
+    List<ServiceStatus> getDownServices(final List<ServiceStatus> serviceStatuses) {
         return serviceStatuses.stream()
                     .filter(Predicate.not(ServiceStatus::isLive))
                     .collect(Collectors.toList());
     }
 
-    String getServicesHealthSummary(List<ServiceStatus> serviceStatuses) {
+    String getServicesHealthSummary(final List<ServiceStatus> serviceStatuses) {
         return serviceStatuses.stream()
                     .map(ServiceStatus::toString)
                     .reduce(new String(), (accumulator, newStatus) -> accumulator.concat(newStatus));

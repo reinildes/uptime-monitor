@@ -28,7 +28,7 @@ public class SimpleNotificationServiceTest {
         var expectedMessage = "The following services are down:\n" +
                 "          google.com         1.0.0.0.1		HTTP: DOWN! | HTTPS: DOWN!\n" +
                 "          amazon.com         1.0.0.0.1		HTTP: UP | HTTPS: DOWN!\n" +
-                "Please verify the root cause.";
+                "Please verify the root cause.\n";
 
         assertThat(captor.getValue(), is(expectedMessage));
 

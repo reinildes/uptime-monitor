@@ -6,7 +6,7 @@ import java.util.*;
 
 class HttpMonitor {
 
-    boolean isReachable(String host, int port) {
+    boolean isReachable(final String host, final int port) {
         // Ping the provided IP and port
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(host, port), 1000);
@@ -16,7 +16,7 @@ class HttpMonitor {
         }
     }
 
-    public ServiceStatus check(String domain) {
+    public ServiceStatus check(final String domain) {
         String ip = null;
 
         // Get the domain's IP so we can ping it
