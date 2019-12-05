@@ -16,6 +16,8 @@ public class Main {
     // Executor to run the check and run reports on a service
     static ScheduledExecutorService taskScheduler = Executors.newScheduledThreadPool(1);
 
+    private static final HttpMonitor httpMonitor = new HttpMonitor();
+
     public static void main(String[] args) {
 
         taskScheduler.scheduleAtFixedRate(() -> {
@@ -32,7 +34,7 @@ public class Main {
         var serviceStatuses =
                 Stream.of(Constants.DOMAINS)
                 .parallel()
-                .map(domain -> new HttpMonitor().check(domain))
+                .map(domain -> httpMonitor.check(domain))
                 .collect(Collectors.toList());
 
         var statusSummary = serviceStatuses.stream()
@@ -49,5 +51,4 @@ public class Main {
             new SimpleNotificationService().send(downServices);
 
     }
-
 }
