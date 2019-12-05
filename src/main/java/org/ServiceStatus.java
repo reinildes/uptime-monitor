@@ -19,8 +19,6 @@ public class ServiceStatus {
 
     @Override
     public String toString() {
-        StringBuilder log = new StringBuilder();
-
         return new StringBuilder()
             .append(String.format("%20s", name))
             .append(String.format("%18s", ip))

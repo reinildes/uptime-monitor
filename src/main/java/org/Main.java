@@ -28,9 +28,10 @@ public class Main {
     }
 
     private static void runMonitor() {
-        var serviceStatuses = Stream.of(Constants.DOMAINS)
+        var serviceStatuses =
+                Stream.of(Constants.DOMAINS)
                 .parallel()
-                .map(HttpMonitor::check)
+                .map(domain -> new HttpMonitor().check(domain))
                 .collect(Collectors.toList());
 
         var statusSummary = serviceStatuses.stream()
