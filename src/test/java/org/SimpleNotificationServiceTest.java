@@ -5,10 +5,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class SimpleNotificationServiceTest {
 
@@ -31,6 +30,5 @@ public class SimpleNotificationServiceTest {
                 "Please verify the root cause.\n";
 
         assertThat(captor.getValue(), is(expectedMessage));
-
     }
 }

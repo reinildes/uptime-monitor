@@ -53,7 +53,6 @@ public class Main {
 
         if(!downServices.isEmpty())
             notificationService.send(downServices);
-
     }
 
     List<ServiceStatus> getDownServices(final List<ServiceStatus> serviceStatuses) {
