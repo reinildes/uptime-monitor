@@ -1,5 +1,6 @@
 package org;
 
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -16,39 +17,61 @@ public class Main {
     // Executor to run the check and run reports on a service
     static ScheduledExecutorService taskScheduler = Executors.newScheduledThreadPool(1);
 
-    private static final HttpMonitor httpMonitor = new HttpMonitor();
+    private HttpMonitor httpMonitor;
+    private NotificationService notificationService;
+
+    public Main() {}
+
+    public Main(HttpMonitor httpMonitor, NotificationService notificationService){
+        this.httpMonitor = httpMonitor;
+        this.notificationService = notificationService;
+    }
 
     public static void main(String[] args) {
+
+        var main = new Main(new HttpMonitor(), new SimpleNotificationService());
 
         taskScheduler.scheduleAtFixedRate(() -> {
             // Clear previously displayed report
             System.out.print("\033[H\033[2J");
             System.out.flush();
 
-            runMonitor();
+            main.runMonitor();
 
         },0, CHECK_INTERVAL, TimeUnit.SECONDS);
     }
 
-    private static void runMonitor() {
-        var serviceStatuses =
-                Stream.of(Constants.DOMAINS)
-                .parallel()
-                .map(domain -> httpMonitor.check(domain))
-                .collect(Collectors.toList());
+    void runMonitor() {
 
-        var statusSummary = serviceStatuses.stream()
-                .map(ServiceStatus::toString)
-                .reduce(new String(), (accumulator, newStatus) -> accumulator.concat(newStatus));
+        var serviceStatuses = getServiceStatuses();
+
+        var statusSummary = getServicesHealthSummary(serviceStatuses);
 
         System.out.println(statusSummary);
 
-        var downServices = serviceStatuses.stream()
-                .filter(Predicate.not(ServiceStatus::isLive))
-                .collect(Collectors.toList());
+        var downServices = getDownServices(serviceStatuses);
 
         if(!downServices.isEmpty())
-            new SimpleNotificationService().send(downServices);
+            notificationService.send(downServices);
 
+    }
+
+    List<ServiceStatus> getDownServices(List<ServiceStatus> serviceStatuses) {
+        return serviceStatuses.stream()
+                    .filter(Predicate.not(ServiceStatus::isLive))
+                    .collect(Collectors.toList());
+    }
+
+    String getServicesHealthSummary(List<ServiceStatus> serviceStatuses) {
+        return serviceStatuses.stream()
+                    .map(ServiceStatus::toString)
+                    .reduce(new String(), (accumulator, newStatus) -> accumulator.concat(newStatus));
+    }
+
+    List<ServiceStatus> getServiceStatuses() {
+        return Stream.of(Constants.DOMAINS)
+        .parallel()
+        .map(domain -> httpMonitor.check(domain))
+        .collect(Collectors.toList());
     }
 }
